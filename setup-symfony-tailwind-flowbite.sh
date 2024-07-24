@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e  # Exit the script if any command fails
+
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <project_name>"
     echo "Name should be your project name"
@@ -15,53 +17,99 @@ APP_JS_URL="https://raw.githubusercontent.com/ICEatm/easySTW/main/files/app.js"
 
 PROJECT_NAME=$1
 
+# Function to handle errors
+handle_error() {
+    echo "Error occurred at line $1."
+    exit 1
+}
+
+# Trap errors
+trap 'handle_error $LINENO' ERR
+
 # Create Symfony project
 echo "Creating Symfony project: $PROJECT_NAME..."
-symfony new $PROJECT_NAME --webapp
+if ! symfony new $PROJECT_NAME --webapp; then
+    echo "Failed to create Symfony project."
+    exit 1
+fi
 
 cd $PROJECT_NAME
 
 # Install TailwindCSS and Flowbite bundles
 echo "Installing TailwindCSS and Flowbite bundles..."
-composer require symfonycasts/tailwind-bundle
+if ! composer require symfonycasts/tailwind-bundle; then
+    echo "Failed to install symfonycasts/tailwind-bundle."
+    exit 1
+fi
 
 # Simulate user confirmation for Flowbite installation
-echo "a" | composer require tales-from-a-dev/flowbite-bundle
+if ! echo "a" | composer require tales-from-a-dev/flowbite-bundle; then
+    echo "Failed to install tales-from-a-dev/flowbite-bundle."
+    exit 1
+fi
 
 # Update Twig configuration
 echo "Downloading Twig configuration from $TWIG_CONFIG_URL..."
-curl -s $TWIG_CONFIG_URL | tee config/packages/twig.yaml > /dev/null
+if ! curl -s $TWIG_CONFIG_URL | tee config/packages/twig.yaml > /dev/null; then
+    echo "Failed to download Twig configuration."
+    exit 1
+fi
 
 # Initialize TailwindCSS
 echo "Initializing TailwindCSS..."
-php bin/console tailwind:init
+if ! php bin/console tailwind:init; then
+    echo "Failed to initialize TailwindCSS."
+    exit 1
+fi
 
 # Import Flowbite
 echo "Importing Flowbite..."
-php bin/console import:require flowbite
+if ! php bin/console import:require flowbite; then
+    echo "Failed to import Flowbite."
+    exit 1
+fi
 
 # Update app.js to include Flowbite
 echo "Downloading app.js from $APP_JS_URL..."
-curl -s $APP_JS_URL | tee assets/app.js > /dev/null
+if ! curl -s $APP_JS_URL | tee assets/app.js > /dev/null; then
+    echo "Failed to download app.js."
+    exit 1
+fi
 
 # Update app.css
 echo "Downloading app.css from $APP_CSS_URL..."
 mkdir -p assets/styles
-curl -s $APP_CSS_URL | tee assets/styles/app.css > /dev/null
+if ! curl -s $APP_CSS_URL | tee assets/styles/app.css > /dev/null; then
+    echo "Failed to download app.css."
+    exit 1
+fi
 
 # Download TailwindCSS configuration
 echo "Downloading TailwindCSS configuration from $TAILWIND_CONFIG_URL..."
-curl -s $TAILWIND_CONFIG_URL | tee tailwind.config.js > /dev/null
+if ! curl -s $TAILWIND_CONFIG_URL | tee tailwind.config.js > /dev/null; then
+    echo "Failed to download tailwind.config.js."
+    exit 1
+fi
 
 # Download start_dev.sh script
 echo "Downloading start_dev.sh script from $START_DEV_URL..."
-curl -s $START_DEV_URL | tee start_dev.sh > /dev/null
+if ! curl -s $START_DEV_URL | tee start_dev.sh > /dev/null; then
+    echo "Failed to download start_dev.sh."
+    exit 1
+fi
 
 # Make the start_dev.sh script executable
-chmod +x start_dev.sh
+echo "Making start_dev.sh executable..."
+if ! chmod +x start_dev.sh; then
+    echo "Failed to make start_dev.sh executable."
+    exit 1
+fi
 
 echo "Building CSS with TailwindCSS..."
 # Run the TailwindCSS build command
-php bin/console tailwind:build
+if ! php bin/console tailwind:build; then
+    echo "Failed to build CSS with TailwindCSS."
+    exit 1
+fi
 
 echo "Setup complete! You can now start your Symfony server with 'symfony server:start' and view your project."
