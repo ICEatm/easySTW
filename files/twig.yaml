@@ -1,0 +1,8 @@
+twig:
+    file_name_pattern: '*.twig'
+    form_themes:
+        - '@TalesFromADev/form/default.html.twig'
+
+when@test:
+    twig:
+        strict_variables: true
