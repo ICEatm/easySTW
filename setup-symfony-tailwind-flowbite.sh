@@ -35,7 +35,7 @@ fi
 
 cd $PROJECT_NAME
 
-# Install TailwindCSS and Flowbite bundles
+# Install TailwindCSS, TwigComponents and Flowbite bundles
 echo "Installing TailwindCSS and Flowbite bundles..."
 if ! composer require symfonycasts/tailwind-bundle; then
     echo "Failed to install symfonycasts/tailwind-bundle."
@@ -46,6 +46,12 @@ fi
 if ! echo "a" | composer require tales-from-a-dev/flowbite-bundle; then
     echo "Failed to install tales-from-a-dev/flowbite-bundle."
     exit 1
+fi
+
+# Install UxTwigComponent
+if ! composer require symfony/ux-twig-component; then
+	echo "Failed to install symfony/ux-twig-component"
+	exit 1
 fi
 
 # Update Twig configuration
