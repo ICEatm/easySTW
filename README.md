@@ -51,10 +51,11 @@ The script performs the following actions:
     symfony new $PROJECT_NAME --webapp
     ```
 
-2. **Installs TailwindCSS and Flowbite Bundles**:
+2. **Installs TailwindCSS, TwigComponents and Flowbite Bundles**:
     ```bash
     composer require symfonycasts/tailwind-bundle
     echo "a" | composer require tales-from-a-dev/flowbite-bundle
+    composer require symfony/ux-twig-component
     ```
 
 3. **Updates Twig Configuration**:
