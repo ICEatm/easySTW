@@ -16,6 +16,11 @@ fi
 echo "Executing Tailwind build..."
 php bin/console tailwind:build --watch &
 
+# Executing the messenger consumer
+# If you are using any kind of mailer
+# This queue will automatically process the mails async
+php bin/console messenger:consume async
+
 # Stream the Symfony server logs
 echo "Streaming Symfony server logs..."
 symfony server:log
