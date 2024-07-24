@@ -22,7 +22,7 @@ Before running the script, ensure that you have the following installed:
 1. **Clone the Repository**:
 
     ```bash
-    git clone https://github.com/your-username/your-repo-name.git
+    git clone https://github.com/ICEatm/easySTW.git
     cd your-repo-name
     ```
 
